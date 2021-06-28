@@ -1,17 +1,13 @@
 const express = require('express'),
   router = express.Router(),
-  Utils = require( './../utils/utils' ),
-  path = require("path");
-
-const directoryName = "./src/posts"
-const postPath = (process.env.LAMBDA_TASK_ROOT)? path.resolve(process.env.LAMBDA_TASK_ROOT, directoryName):path.resolve(__dirname, directoryName)
+  Utils = require( './../utils/utils' );
 
 router.get("/", (req, res) => {
   res.send('Server is running!');
 });
 
 router.get('/getAllPosts',(req,res) => {
-    Utils.readAllFilesFromDirectory(postPath)
+    Utils.readAllFilesFromDirectory('src/posts')
     .then((filenames) => {
       let enhancedFilesNames = Utils.enhanceFilesNames(filenames)
       res.status(200).send(enhancedFilesNames)
@@ -22,13 +18,13 @@ router.get('/getAllPosts',(req,res) => {
 router.get('/getPosts/:fileNameURL',(req,res) => {
     let fileNameURL = req.params.fileNameURL;
 
-    Utils.readAllFilesFromDirectory(postPath)
+    Utils.readAllFilesFromDirectory('src/posts')
     .then((fileNames) => {
       let enhancedFilesNames = Utils.enhanceFilesNames(fileNames),
         fileName = Utils.getFileName(fileNameURL, enhancedFilesNames)
 
         if (fileName) {
-          Utils.readFile(`${postPath}/${fileName}`)
+          Utils.readFile(`src/posts/${fileName}`)
           .then((data) => {
             res.status(200).send(data)
           })
