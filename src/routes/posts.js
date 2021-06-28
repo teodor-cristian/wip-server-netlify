@@ -6,6 +6,9 @@ const express = require('express'),
 const directoryName = "./src/posts"
 const postPath = (process.env.LAMBDA_TASK_ROOT)? path.resolve(process.env.LAMBDA_TASK_ROOT, directoryName):path.resolve(__dirname, directoryName)
 
+router.get("/", (req, res) => {
+  res.send('Server is running!');
+});
 
 router.get('/getAllPosts',(req,res) => {
     Utils.readAllFilesFromDirectory(postPath)
